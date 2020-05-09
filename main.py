@@ -21,9 +21,10 @@ def handleMessage(payloadJson):
     emit('newMsg', payloadJson, room=clients[payload['receiver']])
 
 
-@socketio.on('join', namespace='/chat')
+@socketio.on('connect', namespace='/chat')
 def join(email):
     clients[email] = request.sid
+    emit('after connect', {'data':'Lets dance'})
 
 
 if __name__ == '__main__':
