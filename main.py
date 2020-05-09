@@ -14,14 +14,14 @@ clients = {}
 def index():
     return 'Hello'
 
-@socketio.on('message')
+@socketio.on('message', namespace='/chat')
 def handleMessage(payloadJson):
     payload = json.loads(payloadJson)
     requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payloadJson)
     emit('newMsg', payloadJson, room=clients[payload['receiver']])
 
 
-@socketio.on('join')
+@socketio.on('join', namespace='/chat')
 def join(email):
     clients[email] = request.sid
 
