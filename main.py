@@ -26,6 +26,5 @@ def join(email):
     clients[email] = request.sid
 
 
-
 if __name__ == '__main__':
     socketio.run(app)
