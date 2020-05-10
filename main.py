@@ -39,6 +39,7 @@ def test_connect():
 
 @socketio.on('disconnect', namespace='/chat')
 def test_disconnect():
+    clients.remove(request.sid)
     print('Client disconnected')
 
 
