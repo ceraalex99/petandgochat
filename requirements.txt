@@ -1,4 +1,5 @@
 flask==1.1.2
 flask_socketio==4.3.0
 requests==2.23.0
-gunicorn
+gunicorn==18.0.0
+eventlet
