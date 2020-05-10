@@ -7,7 +7,18 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app)
 
-clients = []
+clients_test = []
+clients = {}
+
+
+fcmURL = "https://fcm.googleapis.com/fcm/send"
+
+key = "AIzaSyBHx4y44Mxlf1Ucy3dVX4IGux-OWCc46No"
+headers = {
+    "Content-Type":"application/json",
+    "Authorization":"key={}".format(key)
+}
+
 
 
 @app.route('/')
@@ -17,12 +28,17 @@ def index():
 
 @socketio.on('message', namespace='/chat')
 def handleMessage(payloadJson):
-    print("eoeoeoeo")
     payload = json.loads(payloadJson)
     requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payloadJson)
-    emit('newMsg', payloadJson, room=clients[payload['receiver']])
-    emit('response', payloadJson)
-
+    if(clients[payload['receiver']]):
+        emit('newMsg', payloadJson, room=clients[payload['receiver']])
+    else:
+        dataRaw = {
+            "data":payloadJson,
+            "to": payload['receiver']
+        }
+        result = requests.post(fcmURL, headers=headers, data=json.dumps(dataRaw))
+        print(result)
 
 @socketio.on('join', namespace='/chat')
 def join(email):
@@ -32,27 +48,23 @@ def join(email):
 
 @socketio.on('connect', namespace='/chat')
 def test_connect():
-    print("connected")
-    clients.append(request.sid)
+    clients_test.append(request.sid)
     emit('my_response', {'data': 'Connected'})
 
 
 @socketio.on('disconnect', namespace='/chat')
 def test_disconnect():
-    clients.remove(request.sid)
-    print('Client disconnected')
+    clients_test.remove(request.sid)
 
 
 @socketio.on('my_event', namespace='/chat')
 def test_message(message):
-    print("lol que funciona loko")
-    emit('my_response', {'data': message['data']}, room=clients[0])
+    emit('my_response', {'data': message['data']}, room=clients_test[0])
 
 
 @socketio.on('my_event2', namespace='/chat')
 def test_message3(message):
-    print("lol que funciona loko2")
-    emit('my_response', {'data': message['data']}, room=clients[1])
+    emit('my_response', {'data': message['data']}, room=clients_test[1])
 
 
 @socketio.on('my_broadcast_event', namespace='/chat')
