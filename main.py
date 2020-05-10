@@ -15,10 +15,9 @@ fcmURL = "https://fcm.googleapis.com/fcm/send"
 
 key = "AIzaSyBHx4y44Mxlf1Ucy3dVX4IGux-OWCc46No"
 headers = {
-    "Content-Type":"application/json",
-    "Authorization":"key={}".format(key)
+    "Content-Type": "application/json",
+    "Authorization": "key={}".format(key)
 }
-
 
 
 @app.route('/')
@@ -27,23 +26,24 @@ def index():
 
 
 @socketio.on('message', namespace='/chat')
-def handleMessage(payloadJson):
-    payload = json.loads(payloadJson)
-    requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payloadJson)
-    if(clients[payload['receiver']]):
-        emit('newMsg', payloadJson, room=clients[payload['receiver']])
+def handle_message(payload_json):
+    payload = json.loads(payload_json)
+    requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
+    if clients[payload['receiver']]:
+        emit('newMsg', payload_json, room=clients[payload['receiver']])
     else:
-        dataRaw = {
-            "data":payloadJson,
+        data_raw = {
+            "data": payload_json,
             "to": payload['receiver']
         }
-        result = requests.post(fcmURL, headers=headers, data=json.dumps(dataRaw))
+        result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
         print(result)
+
 
 @socketio.on('join', namespace='/chat')
 def join(email):
     clients[email] = request.sid
-    emit('after connect', {'data':'Lets dance'})
+    emit('joined', {'data': 'Lets dance'})
 
 
 @socketio.on('connect', namespace='/chat')
@@ -55,6 +55,7 @@ def test_connect():
 @socketio.on('disconnect', namespace='/chat')
 def test_disconnect():
     clients_test.remove(request.sid)
+    clients.pop(list(clients.keys())[list(clients.values()).index(request.sid)])
 
 
 @socketio.on('my_event', namespace='/chat')
