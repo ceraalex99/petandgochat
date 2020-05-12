@@ -49,7 +49,7 @@ def join(email):
 @socketio.on('connect', namespace='/chat')
 def test_connect():
     clients_test.append(request.sid)
-    emit('my_response', {'data': 'Connected'})
+    emit('connect', {'data': 'Connected'})
 
 
 @socketio.on('disconnect', namespace='/chat')
