@@ -42,19 +42,17 @@ def handle_message(payload_json):
     #     result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
     #     print(result)
     print(payload_json)
-    emit('message', payload_json)
+
 
 @socketio.on('join')
 def join(email):
     clients[email] = request.sid
-    emit('joined', {'data': 'Lets dance'})
 
 
 @socketio.on('connect')
 def test_connect():
     print('connected')
     clients_test.append(request.sid)
-    emit('connect', {'data': 'Connected'})
 
 
 @socketio.on('disconnect')
@@ -79,5 +77,4 @@ def test_message2(message):
 
 
 if __name__ == '__main__':
-    print("hola")
     socketio.run(app)
