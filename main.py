@@ -42,6 +42,7 @@ def handle_message(payload_json):
     #     result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
     #     print(result)
     print(payload_json)
+    emit('message', payload_json)
 
 
 @socketio.on('join')
