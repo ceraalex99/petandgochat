@@ -32,8 +32,8 @@ def index():
 def handle_message(payload_json):
     payload = json.loads(payload_json)
     # requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
-    # if clients[payload['receiver']]:
-    #     emit('newMsg', payload_json, room=clients[payload['receiver']])
+    if clients[payload['receiver']]:
+        emit('message', payload_json, room=clients[payload['receiver']])
     # else:
     #     data_raw = {
     #         "data": payload_json,
