@@ -28,17 +28,17 @@ def index():
 @socketio.on('message', namespace='/chat')
 def handle_message(payload_json):
     payload = json.loads(payload_json)
-    requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
-    if clients[payload['receiver']]:
-        emit('newMsg', payload_json, room=clients[payload['receiver']])
-    else:
-        data_raw = {
-            "data": payload_json,
-            "to": payload['receiver']
-        }
-        result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
-        print(result)
-
+    # requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
+    # if clients[payload['receiver']]:
+    #     emit('newMsg', payload_json, room=clients[payload['receiver']])
+    # else:
+    #     data_raw = {
+    #         "data": payload_json,
+    #         "to": payload['receiver']
+    #     }
+    #     result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
+    #     print(result)
+    emit('message', payload_json)
 
 @socketio.on('join', namespace='/chat')
 def join(email):
