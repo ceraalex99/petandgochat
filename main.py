@@ -21,7 +21,7 @@ headers = {
     "Content-Type": "application/json",
     "Authorization": "key={}".format(key)
 }
-
+server_key = '8jGerhqiOlLokORRMEx1WJqx0kCNqqXA'
 
 @app.route('/')
 def index():
@@ -34,13 +34,15 @@ def handle_message(payload_json):
     # requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
     if payload['receiver'] in clients.keys():
         emit('message', payload_json, room=clients[payload['receiver']])
-    # else:
-    #     data_raw = {
-    #         "data": payload_json,
-    #         "to": payload['receiver']
-    #     }
-    #     result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
-    #     print(result)
+    else:
+        r = requests.get(f"https://petandgo.herokuapp.com/api/usuarios/{payload['receiver']}/firebase", headers={"Authorization": server_key})
+        if r.status_code == 200:
+            data_raw = {
+                "data": payload_json,
+                "to": r.text
+            }
+            result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
+            print(result)
     print(payload_json)
     emit('message', payload_json)
 

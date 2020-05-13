@@ -53,7 +53,7 @@
                 return false;
             });
             $('form#leave').submit(function(event) {
-                socket.emit('leave', {room: $('#leave_room').val()});
+                socket.emit('message', {data: $('#leave_room').val(), sender: 'pepito@gmail.com', receiver:'a@prueba.com', createdAt: Date.now()});
                 return false;
             });
             $('form#send_room').submit(function(event) {
