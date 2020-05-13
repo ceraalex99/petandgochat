@@ -42,7 +42,7 @@ def handle_message(payload_json):
             data_raw = {
                 "notification": {
                     "title": payload['sender'],
-                    "body": payload['data']
+                    "body": payload['text']
                 },
                 "to": r.text
             }
