@@ -37,7 +37,7 @@ def handle_message(payload_json):
         print(clients[payload['receiver']])
         emit('message', payload_json, room=clients[payload['receiver']])
     else:
-        r = requests.get(f"https://petandgo.herokuapp.com/api/usuarios/{payload['receiver']}/firebase", headers={"Authorization": server_key})
+        r = requests.get(f"https://petandgo.herokuapp.com/api/usuarios/{payload['receiver']}/firebase", headers={"Authorization": "key="+server_key, "Content-Type": "application/json"})
         if r.status_code == 200:
             data_raw = {
                 "data": payload_json,
