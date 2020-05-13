@@ -30,9 +30,11 @@ def index():
 
 @socketio.on('message')
 def handle_message(payload_json):
+    print(clients)
     payload = json.loads(payload_json)
     # requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
     if payload['receiver'] in clients.keys():
+        print(clients[payload['receiver']])
         emit('message', payload_json, room=clients[payload['receiver']])
     else:
         r = requests.get(f"https://petandgo.herokuapp.com/api/usuarios/{payload['receiver']}/firebase", headers={"Authorization": server_key})
