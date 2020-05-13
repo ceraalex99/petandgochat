@@ -16,7 +16,7 @@ clients = {}
 
 fcmURL = "https://fcm.googleapis.com/fcm/send"
 
-key = "AIzaSyBHx4y44Mxlf1Ucy3dVX4IGux-OWCc46No"
+key = "AAAA__ywlTk:APA91bF6MIcoPLpF4vPetYnky4FJAXgMRbwzVkvID-2iyoSaFIphSRarUTSnmQDvRKXLG3RLmfSUEYsHWEX7WKkXDCtPgEY5zQDk1FNC2lCUWnoMzwMQBwVrKtBeU_ay2Ta0zpZdnJQw"
 headers = {
     "Content-Type": "application/json",
     "Authorization": "key={}".format(key)
@@ -37,10 +37,13 @@ def handle_message(payload_json):
         print(clients[payload['receiver']])
         emit('message', payload_json, room=clients[payload['receiver']])
     else:
-        r = requests.get(f"https://petandgo.herokuapp.com/api/usuarios/{payload['receiver']}/firebase", headers={"Authorization": "key="+server_key, "Content-Type": "application/json"})
+        r = requests.get(f"https://petandgo.herokuapp.com/api/usuarios/{payload['receiver']}/firebase", headers={"Authorization": server_key})
         if r.status_code == 200:
             data_raw = {
-                "data": payload_json,
+                "notification": {
+                    "title": payload['sender'],
+                    "body": payload['data']
+                },
                 "to": r.text
             }
             result = requests.post(fcmURL, headers=headers, data=json.dumps(data_raw))
