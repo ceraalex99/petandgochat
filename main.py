@@ -32,7 +32,7 @@ def index():
 def handle_message(payload_json):
     print(clients)
     payload = json.loads(payload_json)
-    # requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
+    requests.post('https://petandgo.herokuapp.com/api/mensajes', data=payload_json)
     if payload['receiver'] in clients.keys():
         print(clients[payload['receiver']])
         emit('message', payload_json, room=clients[payload['receiver']])
